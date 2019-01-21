@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.util.List;
 
 public class Kata5P1 {
     
@@ -58,9 +60,30 @@ public class Kata5P1 {
         }
     }
     
+    public void fillTable(){
+        String url = "jdbc:sqlite:PEOPLE.db";
+        String path = "C:\\Users\\Eli\\Documents\\NetBeansProjects\\Kata5P1\\email.txt";
+        
+        List<String> emails = MailListReader.read(path);
+        
+        try(Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement()) {
+            String insert = "INSERT INTO EMAIL(Mail) VALUES(?)";
+            PreparedStatement pstmt= conn.prepareStatement(insert);
+            
+            for (String email : emails) {
+                pstmt.setString(1, email);
+                pstmt.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     public static void main(String[] args) {
         Kata5P1 app = new Kata5P1();
         app.selectAll();
-        app.createNewTable();
+        app.fillTable();
     }    
 }
