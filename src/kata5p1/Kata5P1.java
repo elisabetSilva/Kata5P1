@@ -40,8 +40,27 @@ public class Kata5P1 {
         }
     }
     
+    public static void createNewTable() {
+        
+        String url = "jdbc:sqlite:PEOPLE.db";
+        // Instrucción SQL para crear nueva tabla
+        String sql = "CREATE TABLE IF NOT EXISTS EMAIL (\n"
+                + " id integer PRIMARY KEY AUTOINCREMENT,\n"
+                + " Mail text NOT NULL);";
+        
+        try (Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement()) {
+            // Se crea la nueva tabla
+            stmt.execute(sql);
+            System.out.println("Tabla creada");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     public static void main(String[] args) {
         Kata5P1 app = new Kata5P1();
         app.selectAll();
+        app.createNewTable();
     }    
 }
